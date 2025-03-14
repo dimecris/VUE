@@ -1,5 +1,5 @@
 # Como manejar el Github 
-v20250314
+v20250314 12:23
 ## Sinconizar el repositorio teniendo como base el local
 ### 0- Clonar repositorio
 `git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY`
