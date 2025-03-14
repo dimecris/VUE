@@ -1,5 +1,5 @@
 # Como manejar el Github 
-v20250314 12:23
+v20250314 12:27
 ## Sinconizar el repositorio teniendo como base el local
 ### 0- Clonar repositorio
 `git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY`
@@ -45,3 +45,8 @@ Aquí tienes un ejemplo de cómo debería verse tu archivo .gitignore:
 .gitignore
 `# Ignorar la carpeta node_modules
 node_modules/`
+
+
+## Para forzar el push y sobrescribir los cambios remotos:
+
+`git push --force origin master`
