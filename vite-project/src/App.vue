@@ -1,5 +1,6 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/HelloWorld.vue';
+import NuevoComponente from './components/NuevoComponente.vue'
 </script>
 
 <template>
@@ -11,7 +12,14 @@ import HelloWorld from './components/HelloWorld.vue'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <HelloWorld  
+    msg="Vite + Vue"
+    autora="Kris Darias"
+  />
+  <NuevoComponente
+    subtitulo="Nuevo Componente creado por Kris"
+    msg="Este es un nuevo componente creado por Kris para la PEC1"
+  />
 </template>
 
 <style scoped>
@@ -28,3 +36,4 @@ import HelloWorld from './components/HelloWorld.vue'
   filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>
+
