@@ -40,7 +40,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../store/auth'
 import axios from 'axios'
 import ReplyForm from '../views/ReplyForm.vue';
-import { formatDate } from '../utils/date'
+
 import PostCard from '../components/PostCard.vue'
 
 const route = useRoute()

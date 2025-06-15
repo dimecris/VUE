@@ -6,7 +6,7 @@
 
     <div v-else>
       <div class="user-info" v-if="profileUser">
-        <button v-if="profileUser.username === authUser?.username" @click="logout">
+        <button @click="logout">
           Cerrar sesión
         </button>
         <img :src="profileUser.profileImg" alt="Avatar" class="user-info__avatar" />
@@ -21,7 +21,10 @@
 
       <ul class="posts-list">
         <li v-for="post in posts" :key="post.id" class="post">
-          <PostCard :post="post" :hideUserInfo="true" />
+          <PostCard 
+            :post="post" 
+            :hideUserInfo="true" 
+            @click="goToDetail"  />
         </li>
       </ul>
 
@@ -63,6 +66,11 @@ const profileUser = ref(null)
 function logout() {
   authStore.logout()
   router.push('/login')
+}
+function goToDetail(post) {
+  if (!post.postId) {
+    router.push(`/post/${post.id}`)
+  }
 }
 
 async function loadMorePosts() {

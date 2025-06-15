@@ -14,7 +14,7 @@
         - Muestra la fecha de publicación formateada.
         - Muestra iconos y contadores de likes y respuestas.
         - Al hacer clic en el contenido de la publicación, emite un evento 'click' con el objeto post.
-        - Al hacer clic en la imagen de perfil, navega al perfil del usuario correspondiente.
+        - Al hacer clic en la imagen / user / nombre de perfil, navega al perfil del usuario correspondiente.
 
     Dependencias:
         - formatDate: Función utilitaria para formatear fechas.
@@ -28,12 +28,16 @@
   <div :class="['post-card', { 'reply-card': isReply }]"> 
     <div class="post-card">
       <!-- Encabezado de la publicación, muestra información del usuario si no está oculto -->
-      <div v-if="!hideUserInfo"  class="post-header" >
+      <div 
+        v-if="!hideUserInfo"  
+        class="post-header" 
+        @click.stop="goToUserProfile" 
+      >
+        
         <img
             :src="post.user.profileImg"
             alt="Profile Image"
             class="profile-img"
-            @click.stop="goToUserProfile"
           />
         <div>
           <h2>{{ post.user.name }} {{ post.user.surname }}</h2>
@@ -41,10 +45,14 @@
         </div>
       </div>
 
-      <!-- Contenido de la publicación, solo se muestra si no es una respuesta -->
-      <div v-if="!post.postId" class="post-content"  @click="handleClick">
+      <!-- Contenido de la publicación, solo es clicable si no es una respuesta -->
+      <div 
+        class="post-content"
+        @click="handleClick"
+      >
         {{ post.content }}
       </div>
+
 
       <!-- Fecha de publicación -->
       <p class="post-date">{{ formatDate(post.publishDate) }}</p>

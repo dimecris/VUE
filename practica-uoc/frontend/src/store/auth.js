@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
         console.log('Datos enviados:', { username, password });
         // Solicitud para obtener el token de autenticación
         const loginResponse = await axios.post(`${baseUrl}/login`, { username, password });
-        //console.log('Respuesta de la API de login:', loginResponse);
+        console.log('Respuesta de la API de login:', loginResponse);
 
         if (loginResponse.data && loginResponse.data.token) {
           // Guardar el token en el estado y en el almacenamiento local
@@ -42,17 +42,19 @@ export const useAuthStore = defineStore('auth', {
           const userResponse = await axios.get(`${baseUrl}/user/${username}`, {
             headers: { Authorization: this.token }
           });
-          //console.log('Respuesta de la API de usuario:', userResponse);
+          console.log('Respuesta de la API de usuario:', userResponse);
 
           if (userResponse.data) {
             // Guardar los datos del usuario en el estado y en el almacenamiento local
             this.user = userResponse.data;
-            //console.log('Objeto user asignado:', this.user);
+            console.log('Objeto user asignado:', this.user);
             localStorage.setItem('user', JSON.stringify(this.user)); // Guardar el objeto user completo, incluyendo 'bio'
             return { token: this.token, user: this.user };
+          } else {
+            throw new Error('Error al obtener los datos del usuario.');
           }
         } else {
-            throw new Error('Error en el inicio de sesión. Token no recibido.'); // Lanzar un error si no se recibe el token
+          throw new Error('Error en el inicio de sesión. Token no recibido.');
         }
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -70,7 +72,7 @@ export const useAuthStore = defineStore('auth', {
     loadSession() {
       const token = localStorage.getItem('token');
       const user = localStorage.getItem('user');
-      //console.log('Datos locales cargados:', { token, user });
+      console.log('Datos locales cargados:', { token, user });
       if (token && user) {
         this.token = token; // Asignar el token al estado
         this.user = JSON.parse(user); // Parsear y asignar los datos del usuario al estado
@@ -82,7 +84,7 @@ export const useAuthStore = defineStore('auth', {
         this.token = token;
         localStorage.setItem('token', token);
     },
-    // Acción para establecer manualmente los datos del usuario inclusoo si se recarga la pagina o se cierra la aplicacion
+    // Acción para establecer manualmente los datos del usuario
     setUser(user) {
         this.user = user;
         localStorage.setItem('user', JSON.stringify(user));
