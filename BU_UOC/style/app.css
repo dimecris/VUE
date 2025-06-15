@@ -1,0 +1,30 @@
+/* Header */
+.main-header {
+  height: 75px;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+/* Wrapper below header */
+.main {
+  min-height: calc(100vh - 100px);
+}
+
+/* Container for CardBoard and CardForm */
+.shows-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.shows-container__board {
+  flex: 70% 1 0;
+}

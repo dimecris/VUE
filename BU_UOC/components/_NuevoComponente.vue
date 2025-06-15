@@ -2,6 +2,7 @@
 defineProps({
   subtitulo: String,
   msg: String,
+  objetoFruta: Object,
 })
 </script>
 
