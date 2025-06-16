@@ -4,6 +4,7 @@
   --primary-color: #646cff;
   --secondary-color: #1a1d52;
   --grey-color: grey;
+  --light-grey-color: #ddd;
   --light-color: #bfbfbf;
   --white-color: #ffffff;
   --font-family: "Open Sans", sans-serif;
@@ -183,7 +184,7 @@ label {
 input,
 select {
   border-radius: 5px;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--light-grey-color);
   flex: 1 0;
   padding: .875rem .75rem;
   min-height: 2rem;
@@ -199,6 +200,10 @@ input::placeholder, textarea::placeholder, textarea {
 
 input, select, textarea {
   outline: none;
+  border: 1px solid var(--light-grey-color);
+}
+textarea {
+    border-radius: 10px;
 }
 
 .error {

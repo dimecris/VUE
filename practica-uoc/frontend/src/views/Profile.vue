@@ -38,10 +38,10 @@
         <button class="btn" @click="logout">Cerrar sesión</button>
         <img :src="profileUser.profileImg" alt="Avatar" class="user-info__avatar" />
         <h2>{{ profileUser.name }}</h2>
-        <p>@{{ profileUser.username }}</p>
+        <p class="user-username">@{{ profileUser.username }}</p>
         <p>{{ profileUser.bio }}</p>
-        <p v-if="profileUser.registrationDate">
-          Miembro desde {{ formatDate(profileUser.registrationDate) }}
+        <p class="user-joined" v-if="profileUser.registrationDate">
+          Joined on {{ formatDate(profileUser.registrationDate, 'monthYear') }}
         </p>
         <p v-else>Fecha de registro no disponible</p>
       </div>
@@ -71,21 +71,21 @@
 <script setup>
 // Importa las dependencias necesarias
 import { ref, computed, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router' // Importa las dependencias necesarias
 import apiClient from '../api/showsAPI';
 
 
-import { useAuthStore } from '../store/auth'
-import { usePostsStore } from '../store/posts'
-import PostCard from '../components/PostCard.vue'
-import { formatDate } from '../utils/date'
+import { useAuthStore } from '../store/auth' // Store de autenticación
+import { usePostsStore } from '../store/posts' // Store de posts
+import PostCard from '../components/PostCard.vue' // Componente para mostrar posts
+import { formatDate } from '../utils/date'// Utilidad para formatear fechas
 
 
 // Configuración del router y los stores
-const route = useRoute()
-const router = useRouter()
-const { username } = route.params
-const authStore = useAuthStore()
+const route = useRoute() // Te da acceso al objeto de la ruta actual. Esto incluye información como los parámetros (params), los query strings (query), el nombre de la ruta, etc.
+const router = useRouter() //Te da acceso al objeto router, que permite navegar 
+const { username } = route.params // Obtiene el nombre de usuario desde los parámetros de la ruta
+const authStore = useAuthStore() // Store de autenticación
 const postsStore = usePostsStore()
 
 // Estado reactivo
@@ -149,6 +149,9 @@ onMounted(async () => {
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
   position: relative;
+}
+.user-username{
+  color: var(--grey-color)
 }
 .user-info__avatar {
   width: 100px;

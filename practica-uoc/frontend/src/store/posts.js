@@ -57,7 +57,7 @@ export const usePostsStore = defineStore('posts', {
         this._append(data?.result || []) // Agrega los posts obtenidos
         this.totalPosts = data?.paginator?.total ?? this.totalPosts // Actualiza el total de posts
       } catch (err) {
-        console.error('fetchPosts ❌', err) // Manejo de errores
+        console.error('fetchPosts ERRORS: ', err) // Manejo de errores
       } finally {
         this.loading = false // Desactiva el indicador de carga
       }

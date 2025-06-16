@@ -26,7 +26,7 @@
 <template>
   <!-- Componente que representa una tarjeta de publicación o respuesta -->
   <div :class="['post-card', { 'reply-card': isReply }]"> 
-    <div class="post-card">
+    
       <!-- Encabezado de la publicación, muestra información del usuario si no está oculto -->
       <div 
         v-if="!hideUserInfo"  
@@ -70,7 +70,7 @@
                   <path d="M23.9998 18.9999V12.3399C24.0371 9.25737 22.9069 6.27481 20.8362 3.99109C18.7654 1.70737 15.9073 0.291558 12.8358 0.0279206C11.1215 -0.0920218 9.40137 0.15766 7.79188 0.760073C6.18238 1.36249 4.72105 2.30358 3.50675 3.51967C2.29246 4.73576 1.35354 6.19849 0.753514 7.80888C0.153488 9.41927 -0.093644 11.1398 0.0288396 12.8539C0.47084 19.2079 6.08184 23.9999 13.0828 23.9999H18.9998C20.3254 23.9983 21.5963 23.471 22.5336 22.5337C23.471 21.5964 23.9983 20.3255 23.9998 18.9999ZM12.6998 2.02392C15.2663 2.25096 17.6518 3.44083 19.3769 5.35448C21.1021 7.26812 22.0392 9.76374 21.9998 12.3399V18.9999C21.9998 19.7956 21.6838 20.5586 21.1212 21.1212C20.5586 21.6839 19.7955 21.9999 18.9998 21.9999H13.0828C7.04884 21.9999 2.39984 18.0999 2.02484 12.7159C1.92639 11.3445 2.11181 9.96752 2.56952 8.67099C3.02723 7.37446 3.74739 6.18625 4.68501 5.18059C5.62263 4.17493 6.75757 3.37343 8.01891 2.82617C9.28025 2.2789 10.6409 1.99763 12.0158 1.99992C12.2428 1.99992 12.4718 2.00892 12.6998 2.02392Z" fill="#374957"/>
               </svg> {{ post.nReplies }}</span>
       </div>
-    </div> 
+     
 
   </div>
 </template>
@@ -117,7 +117,7 @@ function goToUserProfile() {
 /* Estilo para la tarjeta de publicación */
 .post-card {
   border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  padding: 20px 0;
   cursor: pointer;
 }
 
@@ -137,13 +137,14 @@ function goToUserProfile() {
 
 /* Contenido de la publicación */
 .post-content {
-  margin: 10px 0;
+  margin: 10px 0 5px 0;
 }
 
 /* Fecha de la publicación */
 .post-date {
   font-size: 12px;
-  color: gray;
+  color: var(--grey-color);
+  margin-bottom: 10px;
 }
 
 /* Pie de la publicación */

@@ -54,7 +54,7 @@ const password = ref('') // Almacena la contraseña ingresada
 const router = useRouter()
 const authStore = useAuthStore()
 
-
+// Maneja el envío del formulario de inicio de sesión
 const handleLogin = async () => {
   if (!username.value || !password.value) { // Verifica que los campos no estén vacíos
     alert('Por favor, completa todos los campos.')
@@ -63,6 +63,9 @@ const handleLogin = async () => {
 
   try {
     const response = await authStore.login(username.value, password.value) // Llama al método de inicio de sesión del store
+    // usa el store de autenticación para iniciar sesión
+    // y espera la respuesta
+    // Si la respuesta es exitosa, redirige al perfil del usuario
 
     if (response?.token && response?.user) { // Verifica que la respuesta contenga un token y un usuario
       const { token, user } = response

@@ -136,7 +136,16 @@ onMounted(async () => {
 
 <style scoped>
 .post-detail {
-  padding: 20px;
+  padding: 15px;
+  
+}
+.post-detail > .post-card {
+  border: 1px solid var(--light-grey-color);
+  border-radius: 10px;
+  padding: 15px;
+}
+.post-actions{
+  margin: 20px 0;
 }
 .reply {
   display: flex;
@@ -162,6 +171,7 @@ onMounted(async () => {
   border-radius: 50%;
   object-fit: cover;
 }
+
 .reply-icon{
   display: flex;
   justify-content: flex-end; /* alinea a la derecha */
