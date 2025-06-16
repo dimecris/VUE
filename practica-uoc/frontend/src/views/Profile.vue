@@ -1,3 +1,31 @@
+
+/**
+ * Profile.vue
+ * 
+ * Este archivo define la vista de perfil de usuario en la aplicación.
+ * 
+ * Funcionalidades principales:
+ * - Mostrar la información del perfil del usuario.
+ * - Listar los posts del usuario utilizando el componente `PostCard`.
+ * - Permitir la navegación al detalle de un post al hacer clic en él.
+ * - Cargar más posts del usuario con paginación.
+ * - Manejar el cierre de sesión del usuario.
+ * 
+ * Componentes utilizados:
+ * - PostCard: Componente para mostrar la información de un post.
+ * 
+ * Estado Reactivo:
+ * - token: Token de autenticación del usuario.
+ * - posts: Lista de posts del usuario obtenidos del store.
+ * - hasMorePosts: Indica si hay más posts disponibles para cargar.
+ * - profileUser: Información del usuario del perfil.
+ * 
+ * Métodos:
+ * - logout: Cierra la sesión del usuario y redirige a la vista de login.
+ * - goToDetail: Navega a la vista de detalle de un post.
+ * - loadMorePosts: Carga más posts del usuario con paginación.
+ */
+
 <template>
   <div class="profile">
     <div v-if="!token" class="error-message">
@@ -6,9 +34,7 @@
 
     <div v-else>
       <div class="user-info" v-if="profileUser">
-        <button @click="logout">
-          Cerrar sesión
-        </button>
+        <button class="btn" @click="logout">Cerrar sesión</button>
         <img :src="profileUser.profileImg" alt="Avatar" class="user-info__avatar" />
         <h2>{{ profileUser.name }}</h2>
         <p>@{{ profileUser.username }}</p>
@@ -20,11 +46,13 @@
       </div>
 
       <ul class="posts-list">
-        <li v-for="post in posts" :key="post.id" class="post">
-          <PostCard 
-            :post="post" 
-            :hideUserInfo="true" 
-            @click="goToDetail"  />
+        <li
+          v-for="post in posts"
+          :key="post.id"
+          class="post"
+          @click="goToDetail(post)"
+        >
+          <PostCard :post="post" :hideUserInfo="true" />
         </li>
       </ul>
 
@@ -40,6 +68,7 @@
 </template>
 
 <script setup>
+// Importa las dependencias necesarias
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
@@ -49,62 +78,61 @@ import { usePostsStore } from '../store/posts'
 import PostCard from '../components/PostCard.vue'
 import { formatDate } from '../utils/date'
 
+// Configuración del router y los stores
 const route = useRoute()
 const router = useRouter()
-
-const usernameParam = computed(() => route.params.username)
+const { username } = route.params
 const authStore = useAuthStore()
 const postsStore = usePostsStore()
 
-const authUser = computed(() => authStore.user)
-const token = computed(() => authStore.token)
-const posts = computed(() => postsStore.posts)
-const hasMorePosts = computed(() => posts.value.length < postsStore.totalPosts)
+// Estado reactivo
+const token = computed(() => authStore.token) // Token de autenticación
+const posts = computed(() => postsStore.posts) // Lista de posts del usuario
+const hasMorePosts = computed(() => posts.value.length < postsStore.totalPosts) // Verifica si hay más posts
+const profileUser = ref(null) // Información del usuario del perfil
 
-const profileUser = ref(null)
-
+// Cierra la sesión del usuario y redirige a la vista de login
 function logout() {
   authStore.logout()
   router.push('/login')
 }
+
+// Navega a la vista de detalle de un post
 function goToDetail(post) {
   if (!post.postId) {
     router.push(`/post/${post.id}`)
   }
 }
 
+// Carga más posts del usuario con paginación
 async function loadMorePosts() {
-  if (token.value && usernameParam.value) {
-    await postsStore.fetchPostsByUser({
-      username: usernameParam.value,
-      token: token.value
-    })
+  if (token.value && username) {
+    await postsStore.fetchPostsByUser({ username, token: token.value })
   }
 }
 
+// Carga los datos del perfil y los posts del usuario al montar el componente
 onMounted(async () => {
-  if (!token.value || !usernameParam.value) {
+  if (!token.value || !username) {
     console.warn('Faltan token o username en la ruta')
     return
   }
 
-  // Obtener los datos del perfil del usuario (no necesariamente el logueado)
   try {
-    const response = await axios.get(`http://localhost:3000/user/${usernameParam.value}`, {
+    // Obtener datos del perfil
+    const { data } = await axios.get(`http://localhost:3000/user/${username}`, {
       headers: { Authorization: token.value }
     })
-    profileUser.value = response.data
-  } catch (error) {
-    console.error('Error al obtener el perfil del usuario:', error)
-  }
+    profileUser.value = data // Almacena la información del usuario
 
-  // Cargar sus posts
-  postsStore.offset = 0
-  postsStore.posts = []
-  await postsStore.fetchPostsByUser({
-    username: usernameParam.value,
-    token: token.value
-  })
+    // Cargar posts del usuario
+    postsStore.offset = 0 // Reinicia el offset
+    postsStore.posts = [] // Limpia los posts actuales
+    await postsStore.fetchPostsByUser({ username, token: token.value })
+
+  } catch (error) {
+    console.error('Error en carga de perfil o posts:', error) // Manejo de errores
+  }
 })
 </script>
 

@@ -1,54 +1,24 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../store/auth'
-import { usePostsStore } from '../store/posts'
-import axios from 'axios'
-
-const route = useRoute()
-const router = useRouter()
-const authStore = useAuthStore()
-const postsStore = usePostsStore()
-
-const isEditing = ref(false)
-const form = ref({ content: '' })
-
-const postId = route.params.id // null si estamos creando
-
-onMounted(async () => {
-  if (postId) {
-    isEditing.value = true
-    try {
-      const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
-        headers: { Authorization: authStore.token }
-      })
-      form.value.content = data.content
-    } catch (error) {
-      console.error('Error al cargar el post para editar:', error)
-    }
-  }
-})
-
-async function handleSubmit() {
-  try {
-    let idToRedirect
-
-
-    if (isEditing.value) {
-      await postsStore.updatePost(postId, form.value)
-      idToRedirect = postId
-    } else {
-      const newPost = await postsStore.createPost(form.value)
-      idToRedirect = newPost.id
-    }
-
-    router.push(`/post/${idToRedirect}`)
-  } catch (error) {
-    console.error('Error al enviar el formulario:', error)
-  }
-}
-</script>
-
+/**
+ * PostForm.vue
+ * 
+ * Este archivo define la vista para crear o editar un post en la aplicación.
+ * 
+ * Funcionalidades principales:
+ * - Permitir a los usuarios crear un nuevo post.
+ * - Permitir a los usuarios editar un post existente.
+ * - Manejar la carga de datos del post para edición desde la API.
+ * - Redirigir al detalle del post después de crear o editar.
+ * 
+ * Componentes utilizados:
+ * - Ninguno externo, utiliza elementos HTML nativos.
+ * 
+ * Estado Reactivo:
+ * - isEditing: Indica si el formulario está en modo de edición.
+ * - form: Almacena el contenido del post.
+ * 
+ * Métodos:
+ * - handleSubmit: Maneja el envío del formulario, crea o actualiza el post y redirige al detalle del post.
+ */
 <template>
   <div class="form-post">
     <img :src="authStore.user.profileImg" alt="Avatar" class="form-post__image" />
@@ -64,6 +34,63 @@ async function handleSubmit() {
     </form>
   </div>
 </template>
+<script setup>
+// Importa las dependencias necesarias
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAuthStore } from '../store/auth'
+import { usePostsStore } from '../store/posts'
+import axios from 'axios'
+
+// Obtiene el ID del post desde los parámetros de la ruta
+const { id: postId } = useRoute().params
+
+// Configuración del router y los stores
+const router = useRouter()
+const authStore = useAuthStore()
+const postsStore = usePostsStore()
+
+// Estado reactivo
+const isEditing = ref(false) // Indica si el formulario está en modo de edición
+const form = ref({ content: '' }) // Almacena el contenido del post
+
+// Carga los datos del post para edición al montar el componente
+onMounted(async () => {
+  if (postId) {
+    isEditing.value = true // Activa el modo de edición
+    try {
+      const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
+        headers: { Authorization: authStore.token }
+      })
+      form.value.content = data.content // Carga el contenido del post
+    } catch (error) {
+      console.error('Error al cargar el post para editar:', error)
+    }
+  }
+})
+
+// Maneja el envío del formulario
+async function handleSubmit() {
+  try {
+    let idToRedirect
+
+    if (isEditing.value) {
+      await postsStore.updatePost(postId, form.value) // Actualiza el post existente
+      idToRedirect = postId
+    } else {
+      const newPost = await postsStore.createPost(form.value) // Crea un nuevo post
+      idToRedirect = newPost.id
+    }
+
+    router.push(`/post/${idToRedirect}`) // Redirige al detalle del post
+  } catch (error) {
+    console.error('Error al enviar el formulario:', error) // Manejo de errores
+  }
+}
+
+</script>
+
+
 
 <style scoped>
 .form-post {
@@ -102,3 +129,4 @@ async function handleSubmit() {
   align-self: flex-end;
 }
 </style>
+

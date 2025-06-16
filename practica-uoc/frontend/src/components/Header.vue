@@ -1,3 +1,13 @@
+/**
+ * Componente Header
+ * Este componente representa el encabezado de la aplicación, que incluye el logo y un botón para crear nuevos posts.
+ *
+ * Funcionalidades:
+ * - Muestra el logo de la aplicación.
+ * - Si el usuario está autenticado, muestra un ícono para crear un nuevo post.
+ * - Redirige al formulario de creación de posts al hacer clic en el ícono.
+ */
+
 <template>
   <header class="header">
     <div class="logo">
@@ -15,11 +25,18 @@
   </header>
 </template>
 
+
 <script>
+// Importamos el store de autenticación
 import { useAuthStore } from '../store/auth';
 
 export default {
   computed: {
+    /**
+     * Computed property isAuthenticated
+     * Verifica si el usuario está autenticado utilizando el store de autenticación.
+     * True si el usuario está autenticado, false en caso contrario.
+     */
     isAuthenticated() {
       const authStore = useAuthStore();
       return authStore.isAuthenticated;

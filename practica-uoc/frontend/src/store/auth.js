@@ -1,97 +1,94 @@
 /**
  * auth.js
  * 
- * Este archivo define un store de autenticación utilizando Pinia para gestionar el estado global relacionado con la autenticación del usuario.
+ * Este archivo define un store de Pinia para gestionar la autenticación de usuarios en la aplicación.
  * 
  * Funcionalidades principales:
- * - Iniciar sesión: Realiza una solicitud a la API para autenticar al usuario y almacena el token y los datos del usuario.
- * - Cerrar sesión: Limpia el estado de autenticación y elimina los datos almacenados localmente.
- * - Cargar sesión: Recupera el token y los datos del usuario desde el almacenamiento local para mantener la sesión activa.
- * - Establecer manualmente el token y los datos del usuario.
+ * - Almacenar y gestionar el estado de autenticación del usuario.
+ * - Proveer métodos para iniciar y cerrar sesión.
+ * - Persistir la sesión del usuario en el almacenamiento local.
  * 
- * Este store también incluye un getter para verificar si el usuario está autenticado.
+ * Estado:
+ * - user: Información del usuario autenticado.
+ * - token: Token de autenticación del usuario.
+ * 
+ * Getters:
+ * - isAuthenticated: Devuelve `true` si el usuario está autenticado (es decir, si hay un token válido).
+ * 
+ * Acciones:
+ * - login: Inicia sesión con un nombre de usuario y contraseña, y almacena el token y la información del usuario.
+ * - logout: Cierra la sesión del usuario y limpia el estado.
+ * - loadSession: Carga la sesión del usuario desde el almacenamiento local.
+ * - setAuthToken: Establece manualmente el token de autenticación.
+ * - setUser: Establece manualmente la información del usuario.
  */
 
-import { defineStore } from 'pinia';
-import axios from 'axios';
+// Importa las dependencias necesarias
+import { defineStore } from 'pinia'
+import axios from 'axios'
 
-// URL base para las solicitudes a la API
-const baseUrl = 'http://localhost:3000'
+// Configuración de la instancia de Axios para la API
+const API = axios.create({ baseURL: 'http://localhost:3000' })
 
+// Define el store de autenticación
 export const useAuthStore = defineStore('auth', {
-  // Estado inicial del Store
   state: () => ({
     user: null, // Información del usuario autenticado
-    token: null // Token de autenticación
+    token: null, // Token de autenticación
   }),
+
+  getters: {
+    // Verifica si el usuario está autenticado
+    isAuthenticated: s => !!s.token,
+  },
+
   actions: {
-    // Acción para iniciar sesión
+    // Persiste el estado de autenticación en el almacenamiento local
+    _persist() {
+      localStorage.setItem('token', this.token ?? '')
+      localStorage.setItem('user', JSON.stringify(this.user ?? null))
+    },
+
+    // Inicia sesión con el nombre de usuario y contraseña
     async login(username, password) {
       try {
-        console.log('Datos enviados:', { username, password });
-        // Solicitud para obtener el token de autenticación
-        const loginResponse = await axios.post(`${baseUrl}/login`, { username, password });
-        console.log('Respuesta de la API de login:', loginResponse);
+        const { data: login } = await API.post('/login', { username, password })
+        if (!login?.token) throw new Error('Token no recibido')
 
-        if (loginResponse.data && loginResponse.data.token) {
-          // Guardar el token en el estado y en el almacenamiento local
-          this.token = loginResponse.data.token;
-          localStorage.setItem('token', this.token);
-  
-          // Solicitud para obtener los datos del usuario
-          const userResponse = await axios.get(`${baseUrl}/user/${username}`, {
-            headers: { Authorization: this.token }
-          });
-          console.log('Respuesta de la API de usuario:', userResponse);
+        this.token = login.token // Almacena el token recibido
+        const { data: user } = await API.get(`/user/${username}`, {
+          headers: { Authorization: this.token }, // Incluye el token en la cabecera
+        })
 
-          if (userResponse.data) {
-            // Guardar los datos del usuario en el estado y en el almacenamiento local
-            this.user = userResponse.data;
-            console.log('Objeto user asignado:', this.user);
-            localStorage.setItem('user', JSON.stringify(this.user)); // Guardar el objeto user completo, incluyendo 'bio'
-            return { token: this.token, user: this.user };
-          } else {
-            throw new Error('Error al obtener los datos del usuario.');
-          }
-        } else {
-          throw new Error('Error en el inicio de sesión. Token no recibido.');
-        }
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        throw error;
+        this.user = user // Almacena la información del usuario
+        this._persist() // Persiste la sesión
+        return { token: this.token, user }
+      } catch (err) {
+        console.error('login ❌', err)
+        throw err
       }
     },
-    // Acción para cerrar sesión
+
+    // Cierra la sesión del usuario
     logout() {
-      this.token = null;
-      this.user = null;
-      localStorage.removeItem('token'); // Eliminar el token del almacenamiento local
-      localStorage.removeItem('user'); // Eliminar los datos del usuario del almacenamiento local
+      this.token = null // Limpia el token
+      this.user = null // Limpia la información del usuario
+      this._persist() // Actualiza el almacenamiento local
     },
-    // Acción para cargar la sesión desde el almacenamiento local
+
+    // Carga la sesión desde el almacenamiento local
     loadSession() {
-      const token = localStorage.getItem('token');
-      const user = localStorage.getItem('user');
-      console.log('Datos locales cargados:', { token, user });
-      if (token && user) {
-        this.token = token; // Asignar el token al estado
-        this.user = JSON.parse(user); // Parsear y asignar los datos del usuario al estado
-        console.log('Objeto user después de parsear:', this.user);
-      }
+      const token = localStorage.getItem('token') || null
+      const user  = localStorage.getItem('user')
+
+      this.token = token // Restaura el token
+      this.user  = user ? JSON.parse(user) : null // Restaura la información del usuario
     },
-    // Acción para establecer manualmente el token de autenticación
-    setAuthToken(token) {
-        this.token = token;
-        localStorage.setItem('token', token);
-    },
-    // Acción para establecer manualmente los datos del usuario
-    setUser(user) {
-        this.user = user;
-        localStorage.setItem('user', JSON.stringify(user));
-    }
+
+    // Establece manualmente el token de autenticación
+    setAuthToken(t) { this.token = t; this._persist() },
+
+    // Establece manualmente la información del usuario
+    setUser(u) { this.user = u; this._persist() },
   },
-  getters: {
-    // Getter para verificar si el usuario está autenticado
-    isAuthenticated: (state) => !!state.token
-  }
-});
+})

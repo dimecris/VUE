@@ -1,3 +1,28 @@
+/**
+ * PostDetail.vue
+ * 
+ * Este archivo define la vista de detalle de un post en la aplicación.
+ * 
+ * Funcionalidades principales:
+ * - Mostrar la información detallada de un post utilizando el componente `PostCard`.
+ * - Permitir al autor del post editar o eliminar el post.
+ * - Mostrar las respuestas asociadas al post utilizando el componente `PostCard`.
+ * - Proveer un formulario para añadir nuevas respuestas al post.
+ * - Manejar la carga de datos del post y sus respuestas desde la API.
+ * 
+ * Componentes utilizados:
+ * - PostCard: Componente para mostrar la información de un post o respuesta.
+ * - ReplyForm: Componente para añadir nuevas respuestas al post.
+ * 
+ * Estado Reactivo:
+ * - post: Almacena la información del post actual.
+ * - replies: Almacena las respuestas asociadas al post.
+ * 
+ * Métodos:
+ * - editarPost: Navega al formulario de edición del post.
+ * - eliminarPost: Elimina el post actual y redirige al feed principal.
+ * - addReply: Actualiza la lista de respuestas del post.
+ */
 <template>
   <div v-if="post" class="post-detail">
     <PostCard
@@ -34,36 +59,34 @@
   </div>
 </template>
 
+
 <script setup>
+// Importa las dependencias necesarias
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../store/auth'
 import axios from 'axios'
-import ReplyForm from '../views/ReplyForm.vue';
 
-import PostCard from '../components/PostCard.vue'
+import PostCard from '../components/PostCard.vue' // Componente para mostrar posts
+import ReplyForm from '../views/ReplyForm.vue' // Componente para añadir respuestas
 
-const route = useRoute()
+// Obtiene el ID del post desde los parámetros de la ruta
+const { id: postId } = useRoute().params
+
+// Configuración del router y el store de autenticación
 const router = useRouter()
-const authStore = useAuthStore() // 👉 MOVER AQUÍ
+const authStore = useAuthStore()
 
-const postId = route.params.id
-const post = ref(null)
-const replies = ref([])
+// Estado reactivo
+const post = ref(null) // Almacena la información del post actual
+const replies = ref([]) // Almacena las respuestas asociadas al post
 
-const addReply = async () => {
-  try {
-    const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
-      headers: { Authorization: authStore.token }
-    });
-
-    replies.value = data.replies || [];
-  } catch (error) {
-    console.error('Error actualizando respuestas:', error);
-  }
+// Navega al formulario de edición del post
+const editarPost = () => {
+  router.push(`/post/form/${postId}`)
 }
 
-
+// Elimina el post actual y redirige al feed principal
 const eliminarPost = async () => {
   if (confirm('¿Estás segura de que quieres eliminar este post?')) {
     try {
@@ -77,12 +100,19 @@ const eliminarPost = async () => {
   }
 }
 
-const editarPost = () => {
-  router.push(`/post/form/${postId}`)
+// Actualiza la lista de respuestas del post
+const addReply = async () => {
+  try {
+    const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
+      headers: { Authorization: authStore.token }
+    })
+    replies.value = data.replies || []
+  } catch (error) {
+    console.error('Error actualizando respuestas:', error)
+  }
 }
 
-
-
+// Carga los datos del post y sus respuestas al montar el componente
 onMounted(async () => {
   try {
     const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
@@ -90,18 +120,17 @@ onMounted(async () => {
     })
 
     if (data.postId) {
-      post.value = null
+      post.value = null // Si no se encuentra el post, lo establece como null
       return
     }
 
-    post.value = data
-    replies.value = data.replies || []
+    post.value = data // Almacena la información del post
+    replies.value = data.replies || [] // Almacena las respuestas del post
   } catch (error) {
     console.error('Error cargando detalle del post:', error)
   }
 })
 </script>
-
 
 
 

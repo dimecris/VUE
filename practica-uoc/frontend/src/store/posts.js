@@ -1,126 +1,104 @@
 /**
  * posts.js
  * 
- * Este archivo define un store de Pinia para gestionar el estado global relacionado con los posts en la aplicación.
+ * Este archivo define un store de Pinia para gestionar los posts en la aplicación.
  * 
  * Funcionalidades principales:
- * - Obtener posts desde la API con paginación.
- * - Crear, actualizar y eliminar posts.
- * - Obtener posts específicos de un usuario.
+ * - Almacenar y gestionar el estado de los posts.
+ * - Proveer métodos para realizar operaciones CRUD (crear, leer, actualizar, eliminar) sobre los posts.
+ * - Integración con una API externa para obtener y manipular datos de posts.
+ * - Manejar la paginación de los posts.
  * 
- * Uso:
- * Este store se utiliza para centralizar la lógica de gestión de posts, permitiendo que los componentes accedan y manipulen los datos de manera consistente.
+ * Estado:
+ * - posts: Lista de posts cargados.
+ * - totalPosts: Número total de posts disponibles.
+ * - limit: Número de posts por página.
+ * - offset: Desplazamiento para la paginación.
+ * - loading: Indica si se está cargando información.
+ * 
+ * Acciones:
+ * - fetchPosts: Obtiene una lista de posts desde la API.
+ * - createPost: Crea un nuevo post y lo añade al estado.
+ * - updatePost: Actualiza un post existente en el estado.
+ * - deletePost: Elimina un post del estado.
+ * - fetchPostsByUser: Obtiene los posts de un usuario específico.
  */
 
-// Importaciones necesarias para definir el store y realizar solicitudes HTTP
-import { defineStore } from 'pinia'; // Importación de Pinia para definir el store
-import axios from 'axios'; // Biblioteca para realizar solicitudes HTTP
-import { useAuthStore } from './auth'; // Importación del store de autenticación para manejar la autenticación de usuarios
+// Importa las dependencias necesarias
+import { defineStore, storeToRefs } from 'pinia'
+import axios from 'axios'
+import { useAuthStore } from './auth'
 
-// URL base para las solicitudes a la API
-const baseUrl = 'http://localhost:3000'
+// Configuración de la instancia de Axios para la API
+const API = axios.create({ baseURL: 'http://localhost:3000' })
 
-// Definición del store de Pinia para gestionar los posts
+// Define el store de posts
 export const usePostsStore = defineStore('posts', {
-  // Estado inicial del store
   state: () => ({
-    posts: [], // Lista de posts
+    posts: [], // Lista de posts cargados
     totalPosts: 0, // Número total de posts disponibles
-    limit: 10, // Límite de posts por solicitud
+    limit: 10, // Número de posts por página
     offset: 0, // Desplazamiento para la paginación
-    loading: false // Indicador de carga
+    loading: false, // Indica si se está cargando información
   }),
+
   actions: {
-    // Acción para obtener posts desde la API con paginación
+    // Agrega nuevos posts al estado y actualiza el offset
+    _append(newPosts = []) {
+      this.posts.push(...newPosts)
+      this.offset += this.limit
+    },
+
+    // Obtiene una lista de posts desde la API
     async fetchPosts() {
-        try {
-            this.loading = true; // Activar indicador de carga
-            const response = await axios.get(`${baseUrl}/posts`, { // Solicitud GET a la API para obtener posts
-                params: { 
-                    limit: this.limit, 
-                    offset: this.offset } // Parámetros de paginación
-            });
-
-            if (response.data && Array.isArray(response.data.result)) { // Verificar que la respuesta tiene la estructura esperada
-                this.posts.push(...response.data.result); // Agregar los nuevos posts al estado
-                this.totalPosts = response.data.paginator?.total || this.totalPosts; // Actualizar el total de posts
-                this.offset += this.limit; // Incrementar el desplazamiento
-            } 
-        } catch (error) {
-            console.error('Error al obtener posts:', error);
-        } finally {
-            this.loading = false; // Desactivar indicador de carga
-        }
-    },
-    // Acción para crear un nuevo post
-    async createPost(postData) {
-        try {
-            const authStore = useAuthStore(); // Obtener el store de autenticación
-            const token = authStore.token; // Obtener el token de autenticación
-
-            const response = await axios.post(`${baseUrl}/post`, postData, {
-            headers: {
-                Authorization: token // Incluir el token en los headers
-            }
-            });
-
-            this.posts.unshift(response.data); // Agregar el nuevo post al inicio de la lista
-            return response.data;  // Devolver el post creado
-        } catch (error) {
-            console.error('Error al crear post:', error);
-            throw error;
-        }
-    },
-    // Acción para actualizar un post existente
-    async updatePost(postId, postData) {
-        try {
-            const authStore = useAuthStore(); // Obtener el store de autenticación
-            const token = authStore.token; // Obtener el token de autenticación
-
-            await axios.put(`${baseUrl}/post/${postId}`, postData, {
-            headers: {
-                Authorization: token // Incluir el token en los headers
-            }
-            });
-
-            const index = this.posts.findIndex(post => post.id === postId); // Buscar el índice del post
-            if (index !== -1) {
-                this.posts[index] = { ...this.posts[index], ...postData }; // Actualizar el post en el estado
-            }
-        } catch (error) {
-            console.error('Error al actualizar post:', error);
-            throw error;
-        }
-    },
-    // Acción para eliminar un post
-    async deletePost(postId) {
       try {
-        await axios.delete(`${baseUrl}/post/${postId}`); // Solicitud para eliminar el post
-        this.posts = this.posts.filter(post => post.id !== postId); // Eliminar el post del estado
-      } catch (error) {
-        console.error('Error al eliminar post:', error);
-        throw error;
+        this.loading = true // Activa el indicador de carga
+        const { data } = await API.get('/posts', {
+          params: { limit: this.limit, offset: this.offset }, // Parámetros de paginación
+        })
+        this._append(data?.result || []) // Agrega los posts obtenidos
+        this.totalPosts = data?.paginator?.total ?? this.totalPosts // Actualiza el total de posts
+      } catch (err) {
+        console.error('fetchPosts ❌', err) // Manejo de errores
+      } finally {
+        this.loading = false // Desactiva el indicador de carga
       }
     },
-    // Acción para obtener posts de un usuario específico
-    async fetchPostsByUser({ username, token, limit = 10, offset = 0 }) {
-        try {
-            const response = await axios.get(`${baseUrl}/user/${username}/posts`, {
-            params: { limit, offset }, // Parámetros de paginación
-            headers: {
-                Authorization: `${token}`, // Incluir el token en los headers
-            },
-            });
 
-            if (Array.isArray(response.data.result)) {
-                this.posts.push(...response.data.result); // Agregar los nuevos posts al estado
-                this.totalPosts = response.data.paginator?.total || this.totalPosts; // Actualizar el total de posts
-                this.offset += limit; // Incrementar el desplazamiento
-            }
-        } catch (error) {
-            console.error('Error al obtener posts del usuario:', error);
-            throw error;
-        }
-    }
-  }
-});
+    // Crea un nuevo post y lo añade al inicio de la lista
+    async createPost(payload) {
+      const { token } = storeToRefs(useAuthStore()) // Obtiene el token del store de autenticación
+      const { data } = await API.post('/post', payload, {
+        headers: { Authorization: token.value }, // Incluye el token en la cabecera
+      })
+      this.posts.unshift(data) // Añade el nuevo post al inicio de la lista
+      return data
+    },
+
+    // Actualiza un post existente en la lista
+    async updatePost(id, payload) {
+      const { token } = storeToRefs(useAuthStore()) // Obtiene el token del store de autenticación
+      await API.put(`/post/${id}`, payload, {
+        headers: { Authorization: token.value }, // Incluye el token en la cabecera
+      })
+      const i = this.posts.findIndex(p => p.id === id) // Encuentra el índice del post
+      if (i !== -1) this.posts[i] = { ...this.posts[i], ...payload } // Actualiza el post
+    },
+
+    // Elimina un post de la lista
+    async deletePost(id) {
+      await API.delete(`/post/${id}`) // Llama a la API para eliminar el post
+      this.posts = this.posts.filter(p => p.id !== id) // Filtra el post eliminado
+    },
+
+    // Obtiene los posts de un usuario específico
+    async fetchPostsByUser({ username, token, limit = 10, offset = 0 }) {
+      const { data } = await API.get(`/user/${username}/posts`, {
+        params: { limit, offset }, // Parámetros de paginación
+        headers: { Authorization: token }, // Incluye el token en la cabecera
+      })
+      this._append(data?.result || []) // Agrega los posts obtenidos
+      this.totalPosts = data?.paginator?.total ?? this.totalPosts // Actualiza el total de posts
+    },
+  },
+})
