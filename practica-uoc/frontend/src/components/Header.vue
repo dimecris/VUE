@@ -1,12 +1,13 @@
-/**
- * Componente Header
- * Este componente representa el encabezado de la aplicación, que incluye el logo y un botón para crear nuevos posts.
- *
- * Funcionalidades:
- * - Muestra el logo de la aplicación.
- * - Si el usuario está autenticado, muestra un ícono para crear un nuevo post.
- * - Redirige al formulario de creación de posts al hacer clic en el ícono.
- */
+<!--
+  Componente Header
+  ------------------
+  Este componente representa el encabezado de la aplicación, que incluye el logo y un botón para crear nuevos posts.
+
+  Funcionalidades:
+  - Muestra el logo de la aplicación.
+  - Si el usuario está autenticado, muestra un ícono para crear un nuevo post.
+  - Redirige al formulario de creación de posts al hacer clic en el ícono.
+-->
 
 <template>
   <header class="header">

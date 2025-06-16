@@ -1,4 +1,4 @@
-/** 
+<!--
     PostCard.vue
 
     Componente Vue que representa una tarjeta de publicación o respuesta en una red social o foro.
@@ -22,7 +22,7 @@
 
     Estilos:
         - Define estilos para la tarjeta, encabezado, imagen de perfil, contenido, fecha y pie de publicación.
-*/
+-->
 <template>
   <!-- Componente que representa una tarjeta de publicación o respuesta -->
   <div :class="['post-card', { 'reply-card': isReply }]"> 

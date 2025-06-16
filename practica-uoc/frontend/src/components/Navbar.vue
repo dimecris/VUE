@@ -1,21 +1,22 @@
-/**
- * Componente Navbar
- * -----------------
- * Este componente representa la barra de navegación inferior de la aplicación.
- *
- * Funcionalidades principales:
- * - Navegación entre las vistas principales de la aplicación: Inicio, Login y Perfil.
- * - Muestra diferentes opciones según el estado de autenticación del usuario.
- * - Resalta la vista activa con un estilo visual distintivo.
- *
- * Dependencias:
- * - `useAuthStore` para gestionar el estado de autenticación.
- * - `useRoute` y `useRouter` de Vue Router para manejar la navegación y la ruta actual.
- *
- * Estilos:
- * - Incluye estilos para la barra de navegación, los botones y los íconos.
- * - Resalta la vista activa con un color primario definido en las variables CSS.
- */
+<!--
+  Componente Navbar
+  -----------------
+  Este componente representa la barra de navegación inferior de la aplicación.
+
+  Funcionalidades principales:
+  - Navegación entre las vistas principales de la aplicación: Inicio, Login y Perfil.
+  - Muestra diferentes opciones según el estado de autenticación del usuario.
+  - Resalta la vista activa con un estilo visual distintivo.
+
+  Dependencias:
+  - `useAuthStore` para gestionar el estado de autenticación.
+  - `useRoute` y `useRouter` de Vue Router para manejar la navegación y la ruta actual.
+
+  Estilos:
+  - Incluye estilos para la barra de navegación, los botones y los íconos.
+  - Resalta la vista activa con un color primario definido en las variables CSS.
+-->
+
 
 <template> 
   <nav class="menu">

@@ -1,24 +1,24 @@
-/**
- * Login.vue
- * 
- * Este archivo define la vista de inicio de sesión de la aplicación.
- * 
- * Funcionalidades principales:
- * - Permitir que los usuarios ingresen sus credenciales (usuario y contraseña).
- * - Validar que los campos estén completos antes de enviar el formulario.
- * - Autenticar al usuario utilizando el store de autenticación.
- * - Redirigir al perfil del usuario después de un inicio de sesión exitoso.
- * 
- * Componentes utilizados:
- * - Ninguno externo, utiliza elementos HTML nativos.
- * 
- * Estado Reactivo:
- * - username: Almacena el nombre de usuario ingresado.
- * - password: Almacena la contraseña ingresada.
- * 
- * Métodos:
- * - handleLogin: Maneja el envío del formulario, valida los campos, realiza la autenticación y redirige al perfil del usuario.
- */
+<!--
+Login.vue
+
+Este archivo define la vista de inicio de sesión de la aplicación.
+
+Funcionalidades principales:
+- Permitir que los usuarios ingresen sus credenciales (usuario y contraseña).
+- Validar que los campos estén completos antes de enviar el formulario.
+- Autenticar al usuario utilizando el store de autenticación.
+- Redirigir al perfil del usuario después de un inicio de sesión exitoso.
+
+Componentes utilizados:
+- Ninguno externo, utiliza elementos HTML nativos.
+
+Estado Reactivo:
+- username: Almacena el nombre de usuario ingresado.
+- password: Almacena la contraseña ingresada.
+
+Métodos:
+- handleLogin: Maneja el envío del formulario, valida los campos, realiza la autenticación y redirige al perfil del usuario.
+-->
 
 <template>
   <div class="login">

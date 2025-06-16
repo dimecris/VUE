@@ -1,24 +1,26 @@
-/**
- * PostForm.vue
- * 
- * Este archivo define la vista para crear o editar un post en la aplicación.
- * 
- * Funcionalidades principales:
- * - Permitir a los usuarios crear un nuevo post.
- * - Permitir a los usuarios editar un post existente.
- * - Manejar la carga de datos del post para edición desde la API.
- * - Redirigir al detalle del post después de crear o editar.
- * 
- * Componentes utilizados:
- * - Ninguno externo, utiliza elementos HTML nativos.
- * 
- * Estado Reactivo:
- * - isEditing: Indica si el formulario está en modo de edición.
- * - form: Almacena el contenido del post.
- * 
- * Métodos:
- * - handleSubmit: Maneja el envío del formulario, crea o actualiza el post y redirige al detalle del post.
- */
+<!--
+  PostForm.vue
+  ============
+
+  Este archivo define la vista para crear o editar un post en la aplicación.
+
+  Funcionalidades principales:
+  - Permitir a los usuarios crear un nuevo post.
+  - Permitir a los usuarios editar un post existente.
+  - Manejar la carga de datos del post para edición desde la API.
+  - Redirigir al detalle del post después de crear o editar.
+
+  Componentes utilizados:
+  - Ninguno externo, utiliza elementos HTML nativos.
+
+  Estado Reactivo:
+  - isEditing: Indica si el formulario está en modo de edición.
+  - form: Almacena el contenido del post.
+
+  Métodos:
+  - handleSubmit: Maneja el envío del formulario, crea o actualiza el post y redirige al detalle del post.
+-->
+
 <template>
   <div class="form-post">
     <img :src="authStore.user.profileImg" alt="Avatar" class="form-post__image" />

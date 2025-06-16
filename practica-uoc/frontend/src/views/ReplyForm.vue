@@ -1,13 +1,16 @@
-/**
- * Componente ReplyForm
- * Este componente permite a los usuarios escribir y enviar respuestas a un post.
- *
- * Props:
- * - postId: Identificador del post al que se está respondiendo (String o Number, requerido).
- *
- * Eventos emitidos:
- * - new-reply: Se emite cuando se crea una nueva respuesta, enviando los datos de la respuesta.
- */
+<!--
+  Componente ReplyForm
+  =====================
+
+  Este componente permite a los usuarios escribir y enviar respuestas a un post.
+
+  Props:
+  - postId: Identificador del post al que se está respondiendo (String o Number, requerido).
+
+  Eventos emitidos:
+  - new-reply: Se emite cuando se crea una nueva respuesta, enviando los datos de la respuesta.
+-->
+
 <template>
   <div class="reply-form">
     <textarea

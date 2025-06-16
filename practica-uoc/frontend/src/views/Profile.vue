@@ -1,30 +1,31 @@
+<!--
+  Profile.vue
+  ============
 
-/**
- * Profile.vue
- * 
- * Este archivo define la vista de perfil de usuario en la aplicación.
- * 
- * Funcionalidades principales:
- * - Mostrar la información del perfil del usuario.
- * - Listar los posts del usuario utilizando el componente `PostCard`.
- * - Permitir la navegación al detalle de un post al hacer clic en él.
- * - Cargar más posts del usuario con paginación.
- * - Manejar el cierre de sesión del usuario.
- * 
- * Componentes utilizados:
- * - PostCard: Componente para mostrar la información de un post.
- * 
- * Estado Reactivo:
- * - token: Token de autenticación del usuario.
- * - posts: Lista de posts del usuario obtenidos del store.
- * - hasMorePosts: Indica si hay más posts disponibles para cargar.
- * - profileUser: Información del usuario del perfil.
- * 
- * Métodos:
- * - logout: Cierra la sesión del usuario y redirige a la vista de login.
- * - goToDetail: Navega a la vista de detalle de un post.
- * - loadMorePosts: Carga más posts del usuario con paginación.
- */
+  Este archivo define la vista de perfil de usuario en la aplicación.
+
+  Funcionalidades principales:
+  - Mostrar la información del perfil del usuario.
+  - Listar los posts del usuario utilizando el componente `PostCard`.
+  - Permitir la navegación al detalle de un post al hacer clic en él.
+  - Cargar más posts del usuario con paginación.
+  - Manejar el cierre de sesión del usuario.
+
+  Componentes utilizados:
+  - PostCard: Componente para mostrar la información de un post.
+
+  Estado Reactivo:
+  - token: Token de autenticación del usuario.
+  - posts: Lista de posts del usuario obtenidos del store.
+  - hasMorePosts: Indica si hay más posts disponibles para cargar.
+  - profileUser: Información del usuario del perfil.
+
+  Métodos:
+  - logout: Cierra la sesión del usuario y redirige a la vista de login.
+  - goToDetail: Navega a la vista de detalle de un post.
+  - loadMorePosts: Carga más posts del usuario con paginación.
+-->
+
 
 <template>
   <div class="profile">

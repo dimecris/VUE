@@ -1,28 +1,30 @@
-/**
- * PostDetail.vue
- * 
- * Este archivo define la vista de detalle de un post en la aplicación.
- * 
- * Funcionalidades principales:
- * - Mostrar la información detallada de un post utilizando el componente `PostCard`.
- * - Permitir al autor del post editar o eliminar el post.
- * - Mostrar las respuestas asociadas al post utilizando el componente `PostCard`.
- * - Proveer un formulario para añadir nuevas respuestas al post.
- * - Manejar la carga de datos del post y sus respuestas desde la API.
- * 
- * Componentes utilizados:
- * - PostCard: Componente para mostrar la información de un post o respuesta.
- * - ReplyForm: Componente para añadir nuevas respuestas al post.
- * 
- * Estado Reactivo:
- * - post: Almacena la información del post actual.
- * - replies: Almacena las respuestas asociadas al post.
- * 
- * Métodos:
- * - editarPost: Navega al formulario de edición del post.
- * - eliminarPost: Elimina el post actual y redirige al feed principal.
- * - addReply: Actualiza la lista de respuestas del post.
- */
+<!--
+  PostDetail.vue
+  ==============
+
+  Este archivo define la vista de detalle de un post en la aplicación.
+
+  Funcionalidades principales:
+  - Mostrar la información detallada de un post utilizando el componente `PostCard`.
+  - Permitir al autor del post editar o eliminar el post.
+  - Mostrar las respuestas asociadas al post utilizando el componente `PostCard`.
+  - Proveer un formulario para añadir nuevas respuestas al post.
+  - Manejar la carga de datos del post y sus respuestas desde la API.
+
+  Componentes utilizados:
+  - PostCard: Componente para mostrar la información de un post o respuesta.
+  - ReplyForm: Componente para añadir nuevas respuestas al post.
+
+  Estado Reactivo:
+  - post: Almacena la información del post actual.
+  - replies: Almacena las respuestas asociadas al post.
+
+  Métodos:
+  - editarPost: Navega al formulario de edición del post.
+  - eliminarPost: Elimina el post actual y redirige al feed principal.
+  - addReply: Actualiza la lista de respuestas del post.
+-->
+
 <template>
   <div v-if="post" class="post-detail">
     <PostCard
