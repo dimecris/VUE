@@ -39,10 +39,11 @@
 <script setup>
 // Importa las dependencias necesarias
 import { ref, onMounted } from 'vue'
+import apiClient from '../api/showsAPI';
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../store/auth'
 import { usePostsStore } from '../store/posts'
-import axios from 'axios'
+
 
 // Obtiene el ID del post desde los parámetros de la ruta
 const { id: postId } = useRoute().params
@@ -61,7 +62,7 @@ onMounted(async () => {
   if (postId) {
     isEditing.value = true // Activa el modo de edición
     try {
-      const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
+      const { data } = await apiClient.get(`/post/${postId}`, {
         headers: { Authorization: authStore.token }
       })
       form.value.content = data.content // Carga el contenido del post

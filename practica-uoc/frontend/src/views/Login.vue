@@ -3,11 +3,14 @@ Login.vue
 
 Este archivo define la vista de inicio de sesión de la aplicación.
 
+Propósito:
+- Permitir que los usuarios ingresen sus credenciales (usuario y contraseña) para acceder a la aplicación.
+
 Funcionalidades principales:
-- Permitir que los usuarios ingresen sus credenciales (usuario y contraseña).
 - Validar que los campos estén completos antes de enviar el formulario.
 - Autenticar al usuario utilizando el store de autenticación.
 - Redirigir al perfil del usuario después de un inicio de sesión exitoso.
+- Manejar errores de inicio de sesión y mostrar mensajes al usuario.
 
 Componentes utilizados:
 - Ninguno externo, utiliza elementos HTML nativos.
@@ -51,7 +54,7 @@ const password = ref('') // Almacena la contraseña ingresada
 const router = useRouter()
 const authStore = useAuthStore()
 
-// Maneja el envío del formulario de inicio de sesión
+
 const handleLogin = async () => {
   if (!username.value || !password.value) { // Verifica que los campos no estén vacíos
     alert('Por favor, completa todos los campos.')

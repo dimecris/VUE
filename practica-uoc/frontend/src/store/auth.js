@@ -25,10 +25,9 @@
 
 // Importa las dependencias necesarias
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import apiClient from '../api/showsAPI';
 
-// Configuración de la instancia de Axios para la API
-const API = axios.create({ baseURL: 'http://localhost:3000' })
+
 
 // Define el store de autenticación
 export const useAuthStore = defineStore('auth', {
@@ -52,11 +51,11 @@ export const useAuthStore = defineStore('auth', {
     // Inicia sesión con el nombre de usuario y contraseña
     async login(username, password) {
       try {
-        const { data: login } = await API.post('/login', { username, password })
+        const { data: login } = await apiClient.post('/login', { username, password })
         if (!login?.token) throw new Error('Token no recibido')
 
         this.token = login.token // Almacena el token recibido
-        const { data: user } = await API.get(`/user/${username}`, {
+        const { data: user } = await apiClient.get(`/user/${username}`, {
           headers: { Authorization: this.token }, // Incluye el token en la cabecera
         })
 

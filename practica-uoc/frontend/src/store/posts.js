@@ -26,11 +26,9 @@
 
 // Importa las dependencias necesarias
 import { defineStore, storeToRefs } from 'pinia'
-import axios from 'axios'
+import apiClient from '../api/showsAPI';
 import { useAuthStore } from './auth'
 
-// Configuración de la instancia de Axios para la API
-const API = axios.create({ baseURL: 'http://localhost:3000' })
 
 // Define el store de posts
 export const usePostsStore = defineStore('posts', {
@@ -53,7 +51,7 @@ export const usePostsStore = defineStore('posts', {
     async fetchPosts() {
       try {
         this.loading = true // Activa el indicador de carga
-        const { data } = await API.get('/posts', {
+        const { data } = await  apiClient.get('/posts', {
           params: { limit: this.limit, offset: this.offset }, // Parámetros de paginación
         })
         this._append(data?.result || []) // Agrega los posts obtenidos
@@ -68,7 +66,7 @@ export const usePostsStore = defineStore('posts', {
     // Crea un nuevo post y lo añade al inicio de la lista
     async createPost(payload) {
       const { token } = storeToRefs(useAuthStore()) // Obtiene el token del store de autenticación
-      const { data } = await API.post('/post', payload, {
+      const { data } = await  apiClient.post('/post', payload, {
         headers: { Authorization: token.value }, // Incluye el token en la cabecera
       })
       this.posts.unshift(data) // Añade el nuevo post al inicio de la lista
@@ -78,7 +76,7 @@ export const usePostsStore = defineStore('posts', {
     // Actualiza un post existente en la lista
     async updatePost(id, payload) {
       const { token } = storeToRefs(useAuthStore()) // Obtiene el token del store de autenticación
-      await API.put(`/post/${id}`, payload, {
+      await  apiClient.put(`/post/${id}`, payload, {
         headers: { Authorization: token.value }, // Incluye el token en la cabecera
       })
       const i = this.posts.findIndex(p => p.id === id) // Encuentra el índice del post
@@ -93,7 +91,7 @@ export const usePostsStore = defineStore('posts', {
 
     // Obtiene los posts de un usuario específico
     async fetchPostsByUser({ username, token, limit = 10, offset = 0 }) {
-      const { data } = await API.get(`/user/${username}/posts`, {
+      const { data } = await  apiClient.get(`/user/${username}/posts`, {
         params: { limit, offset }, // Parámetros de paginación
         headers: { Authorization: token }, // Incluye el token en la cabecera
       })

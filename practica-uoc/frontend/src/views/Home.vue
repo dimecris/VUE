@@ -3,25 +3,29 @@ Home.vue
 
 Este archivo define la vista principal del feed de la aplicación.
 
+Propósito:
+- Mostrar las publicaciones más recientes de los usuarios y permitir la interacción con ellas.
+
 Funcionalidades principales:
 - Mostrar una lista de posts utilizando el componente `PostCard`.
 - Permitir la navegación al detalle de un post al hacer clic en él.
-- Cargar más posts al hacer clic en el botón "Cargar más".
-- Manejar el estado de carga y la paginación de los posts.
+- **Cargar más posts al hacer clic en el botón "Cargar más" utilizando paginación.**
+- **Manejar el estado de carga y la paginación de los posts para optimizar el rendimiento.**
+- Realizar un scroll suave al último post cargado para mejorar la experiencia del usuario.
 
 Componentes utilizados:
-- PostCard: Componente para mostrar la información de un post individual.
+- **PostCard:** Componente reutilizable para mostrar la información de un post individual.
 
 Estado Reactivo:
-- posts: Lista de posts obtenidos del store.
-- hasMorePosts: Indica si hay más posts disponibles para cargar.
-- loading: Indica si los posts están siendo cargados.
-- lastPostEl: Referencia al último elemento del feed para el scroll.
+- **posts:** Lista de posts obtenidos del store.
+- **hasMorePosts:** Indica si hay más posts disponibles para cargar.
+- **loading:** Indica si los posts están siendo cargados.
+- **lastPostEl:** Referencia al último elemento del feed para realizar un scroll suave.
 
 Métodos:
-- goToDetail: Navega a la vista de detalle de un post.
-- fetchInitialPosts: Carga los posts iniciales al montar el componente.
-- loadMorePosts: Carga más posts y realiza un scroll suave al último post cargado.
+- **goToDetail:** Navega a la vista de detalle de un post.
+- **fetchInitialPosts:** Reinicia el estado del feed y carga los posts iniciales al montar el componente.
+- **loadMorePosts:** Carga más posts desde el store y realiza un scroll suave al último post cargado.
 -->
 <template>
   <div class="feed">

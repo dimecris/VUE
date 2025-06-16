@@ -65,7 +65,7 @@ const routes = [
 
 // Creación del router con historial de navegación
 const router = createRouter({
-  history: createWebHistory(''), // Historial de navegación basado en la API de historial del navegador
+  history: createWebHistory(''), // Al pasarlo vacio se asume que la aplicación está en el directorio raíz del servidor
   routes // Lista de rutas definidas anteriormente
 })
 

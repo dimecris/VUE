@@ -7,7 +7,7 @@ import Navbar from './components/Navbar.vue';
 <template>
   <div class="container"> 
    <Header />
-    <router-view />
+    <router-view /> <!-- Aquí se renderizarán las vistas según la ruta actual -->
      <Navbar />
   </div>
 </template>

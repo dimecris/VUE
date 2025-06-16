@@ -72,12 +72,14 @@
 // Importa las dependencias necesarias
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
+import apiClient from '../api/showsAPI';
+
 
 import { useAuthStore } from '../store/auth'
 import { usePostsStore } from '../store/posts'
 import PostCard from '../components/PostCard.vue'
 import { formatDate } from '../utils/date'
+
 
 // Configuración del router y los stores
 const route = useRoute()
@@ -121,7 +123,7 @@ onMounted(async () => {
 
   try {
     // Obtener datos del perfil
-    const { data } = await axios.get(`http://localhost:3000/user/${username}`, {
+    const { data } = await apiClient.get(`/user/${username}`, {
       headers: { Authorization: token.value }
     })
     profileUser.value = data // Almacena la información del usuario

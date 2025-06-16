@@ -25,7 +25,7 @@
 <script setup>
 // Importamos las dependencias necesarias
 import { ref } from 'vue'
-import axios from 'axios'
+import apiClient from '../api/showsAPI';
 import { useAuthStore } from '../store/auth'
 
 // Definimos las props que recibe el componente
@@ -57,8 +57,8 @@ const submitReply = async () => {
 
   try {
     // Enviamos la respuesta al backend
-    const { data } = await axios.post(
-      `http://localhost:3000/post/${postId}/reply`,
+    const { data } = await apiClient.post(
+      `/post/${postId}/reply`,
       { content: replyText },
       { headers: { Authorization: token } }
     )

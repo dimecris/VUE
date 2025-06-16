@@ -54,7 +54,7 @@
             />
     </div>
      <!-- formulario para responder -->
-    <ReplyForm :postId="post.id" @new-reply="addReply"/>
+    <ReplyForm :postId="post.id" @new-reply="handleNewReply"/>
   </div>
   <div v-else>
     <p>Cargando...</p>
@@ -65,9 +65,9 @@
 <script setup>
 // Importa las dependencias necesarias
 import { onMounted, ref } from 'vue'
+import apiClient from '../api/showsAPI';
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../store/auth'
-import axios from 'axios'
 
 import PostCard from '../components/PostCard.vue' // Componente para mostrar posts
 import ReplyForm from '../views/ReplyForm.vue' // Componente para añadir respuestas
@@ -92,7 +92,7 @@ const editarPost = () => {
 const eliminarPost = async () => {
   if (confirm('¿Estás segura de que quieres eliminar este post?')) {
     try {
-      await axios.delete(`http://localhost:3000/post/${postId}`, {
+      await apiClient.delete(`/post/${postId}`, {
         headers: { Authorization: authStore.token }
       })
       router.push('/')
@@ -102,22 +102,20 @@ const eliminarPost = async () => {
   }
 }
 
+
 // Actualiza la lista de respuestas del post
-const addReply = async () => {
-  try {
-    const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
-      headers: { Authorization: authStore.token }
-    })
-    replies.value = data.replies || []
-  } catch (error) {
-    console.error('Error actualizando respuestas:', error)
-  }
+const handleNewReply = (newReply) => {
+  // Añade la respuesta al array reactivo (↑ en la UI al instante)
+  replies.value.unshift(newReply)
+
+  // Ajusta el contador que PostCard enseña
+  post.value.nReplies = (post.value.nReplies || 0) + 1
 }
 
 // Carga los datos del post y sus respuestas al montar el componente
 onMounted(async () => {
   try {
-    const { data } = await axios.get(`http://localhost:3000/post/${postId}`, {
+    const { data } = await apiClient.get(`/post/${postId}`, {
       headers: { Authorization: authStore.token }
     })
 
