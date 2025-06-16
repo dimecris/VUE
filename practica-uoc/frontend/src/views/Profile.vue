@@ -35,7 +35,7 @@
 
     <div v-else>
       <div class="user-info" v-if="profileUser">
-        <button class="btn" @click="logout">Cerrar sesión</button>
+        <button v-if="profileUser.username === authStore.user?.username" class="btn" @click="logout">Cerrar sesión</button>
         <img :src="profileUser.profileImg" alt="Avatar" class="user-info__avatar" />
         <h2>{{ profileUser.name }}</h2>
         <p class="user-username">@{{ profileUser.username }}</p>
@@ -96,7 +96,7 @@ const profileUser = ref(null) // Información del usuario del perfil
 
 // Cierra la sesión del usuario y redirige a la vista de login
 function logout() {
-  authStore.logout()
+  authStore.logout() 
   router.push('/login')
 }
 
